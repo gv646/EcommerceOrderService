@@ -1,10 +1,7 @@
 package org.example.orderservice.service;
 
 import org.example.orderservice.clients.ProductServiceClient;
-import org.example.orderservice.dto.CreateOrderResponseDTO;
-import org.example.orderservice.dto.OrderItemDTO;
-import org.example.orderservice.dto.OrderRequestDTO;
-import org.example.orderservice.dto.ProductDTO;
+import org.example.orderservice.dto.*;
 import org.example.orderservice.entity.Order;
 import org.example.orderservice.entity.OrderItem;
 import org.example.orderservice.enums.OrderStatus;
@@ -46,5 +43,13 @@ public class OrderService implements IOrderService {
         Order createdOrder = orderRepository.save(order);
 
         return OrderMapper.toCreateOrderResponseDTO(createdOrder);
+    }
+
+    @Override
+    public CreateOrderResponseDTO updateOrderStatus(UpdateOrderStatusDTO updateOrderStatusDTO) throws Exception {
+        Order order = orderRepository.findById(updateOrderStatusDTO.getOrderId()).orElseThrow(()-> new Exception("Order Not found"));
+        order.setStatus(updateOrderStatusDTO.getStatus());
+        Order updatedOrder = orderRepository.save(order);
+        return OrderMapper.toCreateOrderResponseDTO(updatedOrder);
     }
 }
